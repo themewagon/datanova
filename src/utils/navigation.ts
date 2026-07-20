@@ -1,4 +1,4 @@
 export const navigationLinks = [
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/datanova/about', label: 'About' },
+  { href: '/datanova/contact', label: 'Contact' },
 ];

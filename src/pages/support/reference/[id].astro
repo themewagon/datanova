@@ -4,7 +4,15 @@ import Icon from '@ui/icons/Icon.astro';
 import PostFeedback from '@common/PostFeedback.svelte';
 import { formatDate } from '@utils/utils';
 import { getReadingTime } from '@utils/reading-time';
-import { getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const reference = await getCollection('reference');
+  return reference.map(post => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
 
 // 1. Get the slug from the incoming server request
 const { id } = Astro.params;
@@ -13,7 +21,7 @@ if (id === undefined) {
 }
 
 // 2. Query for the entry directly using the request slug
-const post = await getEntry('reference', id);
+const { post } = Astro.props;
 
 // 3. Redirect if the entry does not exist
 if (post === undefined) {

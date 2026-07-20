@@ -5,7 +5,15 @@ import PostFeedback from '@common/PostFeedback.svelte';
 import type { WithContext, Thing } from 'schema-dts';
 import { formatDate } from '@utils/utils';
 import { getReadingTime } from '@utils/reading-time';
-import { getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map(post => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
 
 // 1. Get the slug from the incoming server request
 const { id } = Astro.params;
@@ -14,7 +22,7 @@ if (id === undefined) {
 }
 
 // 2. Query for the entry directly using the request slug
-const post = await getEntry('articles', id);
+const { post } = Astro.props;
 
 // 3. Redirect if the entry does not exist
 if (post === undefined) {
